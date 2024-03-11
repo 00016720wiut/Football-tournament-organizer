@@ -1,0 +1,35 @@
+include ../head.pug
+body
+    .container.mt-5
+      h1.text-center Upcoming games
+      table.table.table-responsive.table-hover.table-bright.text-black 
+        thead
+          tr
+            th(scope="col") ID
+            th(scope="col") Match Name
+            th(scope="col") Match DateTime
+            th(scope="col") Stadium
+            th(scope="col") Contact Phone
+            th(scope="col") Additional Info
+            th(scope="col") Actions
+        tbody
+          tr
+            td 1
+            td Example Match Name 1
+            td 2024-02-17 10:00
+            td Example Stadium
+            td +1234567890
+            td 42
+            td
+              button.btn.btn-primary.btn-sm Edit
+              button.btn.btn-danger.btn-sm Delete
+          tr
+            td 1
+            td Example Match Name 2
+            td 2024-02-17 10:00
+            td Example Stadium
+            td +1234567890
+            td 42
+            td
+              button.btn.btn-primary.btn-sm Edit
+              button.btn.btn-danger.btn-sm Delete
