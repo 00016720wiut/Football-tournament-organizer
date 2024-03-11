@@ -13,23 +13,30 @@ body
             th(scope="col") Additional Info
             th(scope="col") Actions
         tbody
-          tr
-            td 1
-            td Example Match Name 1
-            td 2024-02-17 10:00
-            td Example Stadium
-            td +1234567890
-            td 42
-            td
-              button.btn.btn-primary.btn-sm Edit
-              button.btn.btn-danger.btn-sm Delete
-          tr
-            td 1
-            td Example Match Name 2
-            td 2024-02-17 10:00
-            td Example Stadium
-            td +1234567890
-            td 42
-            td
-              button.btn.btn-primary.btn-sm Edit
-              button.btn.btn-danger.btn-sm Delete
+script. 
+    document.addEventListener('DOMContentLoaded', function() {
+        axios.get('/api/match').then(function(response) {
+                const matches = response.data;
+                const tableBody = document.querySelector('table tbody');
+                matches.forEach(m => {
+                    const row = document.createElement('tr');
+                    const match = m.match
+                    row.innerHTML = `
+                        <td>${m.id}</td>
+                        <td>${match.matchName}</td>
+                        <td>${match.matchDateTime}</td>
+                        <td>${match.stadium}</td>
+                        <td>${match.contactPhone}</td>
+                        <td>${match.additionalInfo}</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm">Edit</button>
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+    });
