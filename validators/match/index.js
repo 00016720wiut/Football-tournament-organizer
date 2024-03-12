@@ -16,7 +16,7 @@ const addMatchValidation = () => {
       .notEmpty().withMessage('Contact phone must not be empty')
       .matches(/^\+998\d{9}$/).withMessage('Invalid phone number format, it must be +998xxxxxxxxx'),
     body('additionalInfo')
-      .notEmpty().withMessage('additionalInfo must not be empty'),      
+      .notEmpty().withMessage('Please, provide additional information for convenience'),      
   ];
 };
 

@@ -3,10 +3,10 @@ body
     .container.mt-5
       .row.d-flex.align-items-center
         .col-md-6
-          h1 List
+          h1.text-center Upcoming Games
         .col-md-6.text-end
           a.btn.btn-success(href='/add', role='button') Add      
-      table.table.table-responsive.table-hover.table-striped.table-dark
+      table.table.table-responsive.table-hover.table-bright.text-black
         thead
           tr
             th(scope="col") ID
@@ -44,7 +44,7 @@ script.
       console.log(error);
     });
 
-    // Use event delegation for delete buttons
+    // Event delegation for delete buttons
     document.addEventListener('click', function(event) {
       if (event.target && event.target.classList.contains('btn-danger')) {
         const matchId = event.target.getAttribute('data-id');
