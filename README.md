@@ -57,6 +57,8 @@ Copy code
   /services
     - index.js
     /match
-      - index.js
+      - index.js      
 About
 This web application was created to showcase the functionality of a football tournament organizer. It is developed solely for educational purposes and does not represent any real football organization or event.
+
+Gloabal link for the web-site:https://football-tournament-organizer-1.onrender.com
