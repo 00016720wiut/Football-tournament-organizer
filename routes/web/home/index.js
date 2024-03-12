@@ -4,6 +4,9 @@ const home_controller = require('../../../controllers/web/home');
 
 router.get('/', home_controller.index);
 router.get('/add', home_controller.add);
-router.get('/update', home_controller.update);
+router.get('/edit', home_controller.edit);
+router.get('/edit/:id', home_controller.edit);
 
 module.exports = router;
+
+

@@ -1,8 +1,12 @@
 include ../head.pug
 body
     .container.mt-5
-      h1.text-black Upcoming Games
-      table.table.table-responsive.table-hover.table-bright.text-black
+      .row.d-flex.align-items-center
+        .col-md-6
+          h1 List
+        .col-md-6.text-end
+          a.btn.btn-success(href='/add', role='button') Add      
+      table.table.table-responsive.table-hover.table-striped.table-dark
         thead
           tr
             th(scope="col") ID
@@ -12,33 +16,47 @@ body
             th(scope="col") Contact Phone
             th(scope="col") Additional Info
             th(scope="col") Actions
-        tbody.text-black
+        tbody
 script.
-      document.addEventListener('DOMContentLoaded', function() {
-        axios.get('/api/match')
-          .then(function(response) {
-            const matches = response.data;
-            const tableBody = document.querySelector('table tbody');
-            matches.forEach(m => {
-              const row = document.createElement('tr');
-              const match = m.match
-              row.innerHTML = `
-                <td>${m.id}</td>
-                <td>${match.matchName}</td>
-                <td>${match.matchDateTime}</td>
-                <td>${match.stadium}</td>
-                <td>${match.contactPhone}</td>
-                <td>${match.additionalInfo}</td>
-                <td>
-                  <button class="btn btn-primary btn-sm">Edit</button>
-                  <button class="btn btn-danger btn-sm">Delete</button>
-                </td>
-              `;
-              tableBody.appendChild(row);
-            });
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
+  document.addEventListener('DOMContentLoaded', function() {
+    axios.get('/api/match').then(function(response) {
+      const matches = response.data;
+      const tableBody = document.querySelector('table tbody');
+      matches.forEach(t => {
+        const row = document.createElement('tr');
+        const match = t.match
+        row.innerHTML = `
+          <td>${t.id}</td>
+          <td>${match.matchName}</td>
+          <td>${match.matchDateTime}</td>
+          <td>${match.stadium}</td>
+          <td>${match.contactPhone}</td>
+          <td>${match.additionalInfo}</td>
+          <td>
+            <button class="btn btn-primary btn-sm" data-id="${t.id}" onclick="window.location.href='/edit/${t.id}'">Edit</button>
+            <button class="btn btn-danger btn-sm" data-id="${t.id}">Delete</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
       });
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+
+    // Use event delegation for delete buttons
+    document.addEventListener('click', function(event) {
+      if (event.target && event.target.classList.contains('btn-danger')) {
+        const matchId = event.target.getAttribute('data-id');
+        axios.delete(`/api/match/${matchId}`).then(function(response) {
+          alert('Deleted successfully', response);
+          location.href = '/'
+        })
+        .catch(function(error) {
+          alert('Error deleting match: ' + error);
+        });
+      }
+    });
+    
+  });
 

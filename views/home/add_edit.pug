@@ -1,35 +1,74 @@
 include ../head.pug
 body
-    .container.mt-5
-      h1.text-center Add/Update Match
-      form(action="/submit-event-form" method="POST")
-        .mb-3
-          label(for="matchName" class="form-label") Match Name
-          input(type="text" class="form-control" id="matchName" name="matchName" required)
-        .mb-3
-          label(for="matchDateTime" class="form-label") Match Date/Time
-          .input-group.date(id="datetimepicker1" data-target-input="nearest")
-            input(type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1" name="matchDateTime" required)
-            .input-group-append(data-target="#datetimepicker1" data-toggle="datetimepicker")
-              .input-group-text
-                i.fas.fa-calendar-alt
-        .mb-3
-          label(for="stadium" class="form-label") Stadium
-          input(type="text" class="form-control" id="stadium" name="stadium" required)
-        .mb-3
-          label(for="contactPhone" class="form-label") Contact Phone
-          input(type="tel" class="form-control" id="contactPhone" name="contactPhone" required)
-        .mb-3
-          label(for="additionalInfo" class="form-label") Additional Info
-          input(type="text" class="form-control" id="additionalInfo" name="additionalInfo" required)
-        button(type="submit" class="btn btn-primary") Add/Edit
+  .container.mt-5
+    h1 #{mode}
+    .mb-3
+      label(for="matchName" class="form-label") Match Name
+      input(type="text" class="form-control" id="matchName" name="matchName" required)
+    .mb-3
+      label(for="matchDateTime" class="form-label") Match Date/Time
+      .input-group.date(id="datetimepicker1" data-target-input="nearest")
+        input(type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1" id="matchDateTime" name="matchDateTime" required)
+        .input-group-append(data-target="#datetimepicker1" data-toggle="datetimepicker")
+          .input-group-text
+            i.fas.fa-calendar-alt
+    .mb-3
+      label(for="stadium" class="form-label") Stadium
+      input(type="text" class="form-control" id="stadium" name="stadium" required)
+    .mb-3
+      label(for="contactPhone" class="form-label") Contact Phone
+      input(type="tel" class="form-control" id="contactPhone" name="contactPhone" required)
+    .mb-3
+      label(for="additionalInfo" class="form-label") Additional Info
+      input(type="text" class="form-control" id="additionalInfo" name="additionalInfo" required)
+    button(type="submit" class="btn btn-success" onclick="submitForm()") #{mode === 'edit' ? 'Edit' : 'Add'}
+    span &nbsp;
+    button(type="submit" class="btn btn-primary" onclick="window.location.href='/'") Back to list
 
-    script.
-        const picker = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),{
-            localization: {
-                'locale': 'fr'
-            }
-        });
-        picker.dates.formatInput = function(date) {
-            return moment(date).format('DD/MM/YYYY HH:mm')
+  script.
+    const format = 'DD/MM/YYYY HH:mm'
+    const picker = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),{
+        localization: {
+            'locale': 'fr'
         }
+    })
+    picker.dates.formatInput = function(date) {
+        return moment(date).format(format)
+    }
+
+    if ("#{mode}" === "edit") {
+      const matchData = !{JSON.stringify(matchData || {})}.match;
+      document.getElementById('matchName').value = matchData.matchName || '';
+
+      picker.dates.setValue(
+        new tempusDominus.DateTime(moment(matchData.matchDateTime, format))
+      );
+
+      document.getElementById('stadium').value = matchData.stadium || '';
+      document.getElementById('contactPhone').value = matchData.contactPhone || '';
+      document.getElementById('additionalInfo').value = matchData.additionalInfo || '';
+    }
+
+    function submitForm() {
+      const matchData = {
+        matchName: document.getElementById('matchName').value,
+        matchDateTime: document.getElementById('matchDateTime').value,
+        stadium: document.getElementById('stadium').value,
+        contactPhone: document.getElementById('contactPhone').value,
+        additionalInfo: document.getElementById('additionalInfo').value,
+      };
+
+      const url = "#{mode}" === "edit" ? `/api/match/${!{JSON.stringify(matchData || {})}.id}` : '/api/match';
+      const method = "#{mode}" === "edit" ? 'put' : 'post';
+
+      axios[method](url, matchData).then(response => {
+        alert('Success!');
+        location.href = '/'
+      })
+      .catch(error => {
+        if(error.response)
+          alert(JSON.stringify(error.response.data.errors))
+        else
+          alert(error)
+      });
+    }
